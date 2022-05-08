@@ -11,4 +11,8 @@ public class DefaultController : IInputController
         return Input.GetAxisRaw("Horizontal") > 0;
     }
 
+    public bool Jump()
+    {
+        return Input.GetButton("Jump");
+    }
 }

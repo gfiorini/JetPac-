@@ -2,4 +2,5 @@
 {
     bool MoveRight();
     bool MoveLeft();
+    bool Jump();
 }

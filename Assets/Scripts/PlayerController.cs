@@ -5,16 +5,21 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    private bool right = true;
+    [SerializeField]
+    private float verticalStrength = 2f;
 
     [SerializeField]
-    private float speed = 20;
+    private float horizontalStrength = 0.5f;
+
+    private bool facingRight = true;
 
     private Rigidbody2D rb;
 
     private SpriteRenderer sr;
 
     private IInputController ic;
+
+
 
     private void Awake()
     {
@@ -38,28 +43,31 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
 
-        float deltaX = speed * Time.fixedDeltaTime;
-
         if (ic.MoveRight())
         {
-            float x = transform.position.x + deltaX;
-            rb.MovePosition(new Vector2(x, transform.position.y));
-            if (!right)
+            rb.AddForce(Vector2.right * horizontalStrength, ForceMode2D.Force);
+            if (!facingRight)
             {
                 sr.flipX = !sr.flipX;
-                right = true;
+                facingRight = true;
             }
         }
 
         if (ic.MoveLeft())
         {
-            float x = transform.position.x - deltaX;
-            rb.MovePosition(new Vector2(x, transform.position.y));
-            if (right)
+            rb.AddForce(- Vector2.right * horizontalStrength, ForceMode2D.Force);
+            if (facingRight)
             {
                 sr.flipX = !sr.flipX;
-                right = false;
+                facingRight = false;
             }
+        }
+
+        if (ic.Jump())
+        {
+            
+            rb.AddForce(transform.up * verticalStrength, ForceMode2D.Impulse);
+
         }
 
 
