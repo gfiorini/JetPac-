@@ -13,13 +13,13 @@ public class PlayerController : MonoBehaviour
 
     private bool facingRight = true;
 
-    private Rigidbody2D rb;
+    private Rigidbody2D rigidBody;
 
-    private SpriteRenderer sr;
+    private SpriteRenderer spriteRenderer;
 
-    private IInputController ic;
+    private IInputController inputController;
 
-
+    private Animator animator;
 
     private void Awake()
     {
@@ -28,10 +28,10 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
-        ic = new DefaultController();
-        
+        rigidBody = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+        inputController = new DefaultController();
     }
 
     
@@ -43,38 +43,38 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
 
-        if (ic.MoveRight())
+        if (inputController.MoveRight())
         {
-            rb.AddForce(Vector2.right * horizontalStrength, ForceMode2D.Force);
+            rigidBody.AddForce(Vector2.right * horizontalStrength, ForceMode2D.Force);
             if (!facingRight)
             {
-                sr.flipX = !sr.flipX;
+                spriteRenderer.flipX = !spriteRenderer.flipX;
                 facingRight = true;
             }
         }
 
-        if (ic.MoveLeft())
+        if (inputController.MoveLeft())
         {
-            rb.AddForce(- Vector2.right * horizontalStrength, ForceMode2D.Force);
+            rigidBody.AddForce(-Vector2.right * horizontalStrength, ForceMode2D.Force);
             if (facingRight)
             {
-                sr.flipX = !sr.flipX;
+                spriteRenderer.flipX = !spriteRenderer.flipX;
                 facingRight = false;
             }
         }
 
-        if (ic.Jump())
-        {
-            
-            rb.AddForce(transform.up * verticalStrength, ForceMode2D.Impulse);
+        DoFly(inputController.Jump());
+    }
 
+    private void DoFly(bool flag)
+    {
+        if (flag)
+        {
+            rigidBody.AddForce(transform.up * verticalStrength, ForceMode2D.Impulse);
         }
 
-
+        animator.SetBool("isFlying", flag);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        
-    }
+   
 }
