@@ -14,11 +14,19 @@ public class PlayerController : MonoBehaviour
 
     private SpriteRenderer sr;
 
+    private IInputController ic;
+
+    private void Awake()
+    {
+        
+    }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        ic = new DefaultController();
+        
     }
 
     
@@ -32,10 +40,9 @@ public class PlayerController : MonoBehaviour
 
         float deltaX = speed * Time.fixedDeltaTime;
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (ic.MoveRight())
         {
             float x = transform.position.x + deltaX;
-            Debug.Log("move to x: " + x);
             rb.MovePosition(new Vector2(x, transform.position.y));
             if (!right)
             {
@@ -44,9 +51,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow)){
+        if (ic.MoveLeft())
+        {
             float x = transform.position.x - deltaX;
-            Debug.Log("move to x: " + x);
             rb.MovePosition(new Vector2(x, transform.position.y));
             if (right)
             {
