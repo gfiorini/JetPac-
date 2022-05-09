@@ -13,6 +13,6 @@ public class DefaultController : IInputController
 
     public bool Jump()
     {
-        return Input.GetButton("Jump");
+        return Input.GetAxisRaw("Vertical") > 0 || Input.GetButton("Jump");
     }
 }
